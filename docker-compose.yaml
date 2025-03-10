@@ -1,0 +1,36 @@
+services:
+  #______________________________ SERVICE FOR VUE {APP_REPOSITORY_NAME} ___________________________________________________
+  app_repository_name: #required to edit this and change into your {app_repository_name} (ex. krbs_kids)
+    build:
+      context: repo_{app_repository_name}
+      dockerfile: Dockerfile
+    volumes:
+      - ./repo_{app_repository_name}/{app_repository_name}:/{app_repository_name}  # Mount source code
+      - /{app_repository_name}/node_modules  # Avoid overwriting node_modules
+    ports:
+      - "8083:8083" #edit this port based on your project requirement
+    working_dir: /{app_repository_name}
+    command: npm run serve
+    networks:
+      - app_network
+
+#delete redis service if not needed else uncomment it
+
+#  redis:
+#    image: redis:latest
+#    container_name: redis
+#    restart: unless-stopped
+#    environment:
+#      - REDIS_PASSWORD=3lit3@docker #you can change 3lit3@docker if desired
+#    networks:
+#      - app_network
+#    ports:
+#      - "6380:6379"  # Expose Redis on port 6380
+#    command: redis-server --requirepass 3lit3@docker #you can change 3lit3@docker if desired
+#    volumes:
+#      - ./redis-data:/data
+
+#______________________________ APP NETWORK FOR ALL SERVICES ___________________________________________________
+networks:
+  app_network:
+    driver: bridge
