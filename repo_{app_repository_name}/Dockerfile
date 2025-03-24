@@ -1,12 +1,28 @@
-#you can change node version based on your project requirement
-FROM node:14.21.3
+# Use Node.js 20 as the base image
+FROM node:20
 
-COPY ./app_repository_name /app_repository_name
+# Define build arguments
+ARG APP_REPOSITORY_NAME
+ARG APP_DIRECTORY
+ARG EXPOSE_PORT
+
+# Set default values if not provided
+ENV APP_REPOSITORY_NAME=${APP_REPOSITORY_NAME:-elite}
+
+# Copy application source code
+COPY ${APP_DIRECTORY} /${APP_REPOSITORY_NAME}
 
 # Set working directory
-WORKDIR /app_repository_name
+WORKDIR /${APP_REPOSITORY_NAME}
 
+# Ensure node user owns the working directory
+RUN chown -R node:node /${APP_REPOSITORY_NAME}
+
+# Switch to the node user
+USER node
+
+# Install dependencies
 RUN npm install
 
-#Expose port 8083 and make sure that port declared in the service will the same on this
-EXPOSE 8083
+# Expose the specified port
+EXPOSE ${EXPOSE_PORT}
