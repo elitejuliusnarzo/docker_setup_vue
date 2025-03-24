@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
       args:
         APP_REPOSITORY_NAME: {app_repository_name}
+        APP_DIRECTORY : ./{app_repository_name}
         EXPOSE_PORT : 5173 #change this to exact port that the app uses
     volumes:
       - ./repo_{app_repository_name}/{app_repository_name}:/{app_repository_name}  # Mount source code
